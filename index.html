@@ -1,239 +1,316 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>公共API聚合工具</title>
-<style>
-  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
-  header { background:#222; color:#fff; padding:1em; text-align:center; }
-  nav { background:#eee; padding:0.5em; text-align:center; }
-  nav button { margin:0 0.5em; padding:0.5em 1em; cursor:pointer; border:none; background:#222; color:#fff; border-radius:3px; }
-  nav button.active { background:#0078d7; }
-  section { display:none; padding:1em; max-width:600px; margin:1em auto; background:#fff; border-radius:6px; box-shadow:0 0 8px #ccc; }
-  section.active { display:block; }
-  .api-box { margin-top:1em; }
-  input[type=text] { width:80%; padding:0.5em; margin-right:0.5em; border:1px solid #ccc; border-radius:3px; }
-  button.api-btn { padding:0.5em 1em; cursor:pointer; border:none; background:#0078d7; color:#fff; border-radius:3px; }
-  pre { background:#f0f0f0; padding:1em; border-radius:3px; overflow-x:auto; max-height:300px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>免费公共API聚合工具</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #222; color: white; padding: 1em; text-align: center; }
+    nav { background: #eee; padding: 0.8em; text-align: center; }
+    nav button { margin: 0 0.3em; padding: 0.5em 1em; border: none; background: #222; color: white; cursor: pointer; border-radius: 3px; }
+    nav button:hover { background: #444; }
+    .section { display: none; padding: 1em 2em; }
+    .section.active { display: block; }
+    .api-box { background: white; padding: 1em; margin: 1em 0; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    input[type="text"], input[type="number"] { width: 80%; padding: 0.5em; margin-top: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
+    button.action-btn { margin-top: 0.5em; padding: 0.5em 1em; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button.action-btn:hover { background: #218838; }
+    img { max-width: 100%; border-radius: 6px; margin-top: 1em; }
+    pre { background: #eee; padding: 1em; border-radius: 4px; overflow-x: auto; }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>🎯 免费公共 API 聚合工具</h1>
+    <p>选择下面分类使用不同的免费API</p>
+  </header>
 
-<header>
-  <h1>公共API聚合工具</h1>
-  <p>免费、无需授权、公开API示例</p>
-</header>
+  <nav>
+    <button onclick="switchSection('knowledge')">📚 知识百科</button>
+    <button onclick="switchSection('books')">📖 书籍查询</button>
+    <button onclick="switchSection('weather')">🌤 天气查询</button>
+    <button onclick="switchSection('location')">📍 IP定位</button>
+    <button onclick="switchSection('tv')">📺 影视查询</button>
+    <button onclick="switchSection('fun')">🎉 趣味活动</button>
+    <button onclick="switchSection('joke')">😂 笑话</button>
+    <button onclick="switchSection('image')">🖼️ 随机图片</button>
+    <button onclick="switchSection('number')">🔢 数字趣味</button>
+  </nav>
 
-<nav>
-  <button class="nav-btn active" data-target="knowledge">📚 知识</button>
-  <button class="nav-btn" data-target="entertainment">🎬 娱乐</button>
-  <button class="nav-btn" data-target="music">🎵 音乐</button>
-  <button class="nav-btn" data-target="weather">🌦 天气地理</button>
-  <button class="nav-btn" data-target="image">🖼 图片</button>
-  <button class="nav-btn" data-target="fun">👨‍💻 趣味</button>
-</nav>
-
-<section id="knowledge" class="active">
-  <h2>知识类</h2>
-  <div class="api-box">
-    <p>Wikipedia 搜索摘要</p>
-    <input type="text" id="wikiQuery" placeholder="输入关键词，例如：China" />
-    <button class="api-btn" onclick="searchWikipedia()">搜索</button>
-    <pre id="wikiResult"></pre>
-  </div>
-  <div class="api-box">
-    <p>Numbers API - 获取数字趣闻</p>
-    <input type="text" id="numberQuery" placeholder="输入数字，例如：42" />
-    <button class="api-btn" onclick="searchNumber()">查询</button>
-    <pre id="numberResult"></pre>
-  </div>
-</section>
-
-<section id="entertainment">
-  <h2>娱乐类</h2>
-  <div class="api-box">
-    <p>OMDb - 电影信息查询</p>
-    <input type="text" id="movieQuery" placeholder="输入电影名，例如：Inception" />
-    <button class="api-btn" onclick="searchOMDb()">查询</button>
-    <pre id="movieResult"></pre>
-  </div>
-  <div class="api-box">
-    <p>TMDb - 电影详情查询</p>
-    <input type="text" id="tmdbQuery" placeholder="输入电影名，例如：Avatar" />
-    <button class="api-btn" onclick="searchTMDb()">查询</button>
-    <pre id="tmdbResult"></pre>
-  </div>
-</section>
-
-<section id="music">
-  <h2>音乐类</h2>
-  <div class="api-box">
-    <p>Lyrics.ovh - 歌词查询</p>
-    <input type="text" id="artistQuery" placeholder="歌手名，例如：Adele" />
-    <input type="text" id="songQuery" placeholder="歌曲名，例如：Hello" />
-    <button class="api-btn" onclick="searchLyrics()">查询歌词</button>
-    <pre id="lyricsResult"></pre>
-  </div>
-</section>
-
-<section id="weather">
-  <h2>天气 / 地理类</h2>
-  <div class="api-box">
-    <p>IP-API - 获取当前IP地理位置</p>
-    <button class="api-btn" onclick="getIPLocation()">获取位置</button>
-    <pre id="locationResult"></pre>
-  </div>
-</section>
-
-<section id="image">
-  <h2>图片类</h2>
-  <div class="api-box">
-    <p>Picsum - 获取随机图片</p>
-    <button class="api-btn" onclick="getRandomImage()">获取图片</button>
-    <div style="margin-top:1em;">
-      <img id="randomImg" alt="随机图片" style="max-width:100%; border-radius:6px; box-shadow:0 0 5px #ccc" />
+  <!-- 知识百科 -->
+  <section id="knowledge" class="section active">
+    <div class="api-box">
+      <h3>Wikipedia 搜索</h3>
+      <p>搜索 Wikipedia 文章摘要</p>
+      <input type="text" id="wikiInput" placeholder="输入关键词..." />
+      <button class="action-btn" onclick="searchWikipedia()">搜索</button>
+      <div id="wikiResult"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="fun">
-  <h2>趣味工具类</h2>
-  <div class="api-box">
-    <p>BoredAPI - 获取活动建议</p>
-    <button class="api-btn" onclick="getActivity()">获取活动</button>
-    <pre id="activityResult"></pre>
-  </div>
-  <div class="api-box">
-    <p>JokeAPI - 获取笑话</p>
-    <button class="api-btn" onclick="getJoke()">获取笑话</button>
-    <pre id="jokeResult"></pre>
-  </div>
-</section>
+  <!-- 书籍查询 -->
+  <section id="books" class="section">
+    <div class="api-box">
+      <h3>OpenLibrary 书籍搜索</h3>
+      <p>通过书名搜索图书信息</p>
+      <input type="text" id="bookInput" placeholder="输入书名..." />
+      <button class="action-btn" onclick="searchBooks()">搜索</button>
+      <div id="bookResult"></div>
+    </div>
+  </section>
 
-<script>
-  // 导航切换
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const target = btn.getAttribute('data-target');
-      document.querySelectorAll('section').forEach(sec => {
-        sec.classList.toggle('active', sec.id === target);
+  <!-- 天气查询 -->
+  <section id="weather" class="section">
+    <div class="api-box">
+      <h3>Open-Meteo 天气查询</h3>
+      <p>输入经纬度查询当前天气（示例：纬度30，经度120）</p>
+      <input type="number" id="latInput" step="0.01" placeholder="纬度" />
+      <input type="number" id="lonInput" step="0.01" placeholder="经度" />
+      <button class="action-btn" onclick="getWeather()">查询天气</button>
+      <div id="weatherResult"></div>
+    </div>
+  </section>
+
+  <!-- IP定位 -->
+  <section id="location" class="section">
+    <div class="api-box">
+      <h3>ipwho.is IP定位</h3>
+      <p>获取当前IP地理位置</p>
+      <button class="action-btn" onclick="getLocation()">获取位置</button>
+      <div id="locationResult"></div>
+    </div>
+  </section>
+
+  <!-- 影视查询 -->
+  <section id="tv" class="section">
+    <div class="api-box">
+      <h3>TVMaze 影视搜索</h3>
+      <p>输入电视剧名称获取简介</p>
+      <input type="text" id="tvInput" placeholder="输入电视剧名..." />
+      <button class="action-btn" onclick="searchTVMaze()">搜索</button>
+      <div id="tvResult"></div>
+    </div>
+  </section>
+
+  <!-- 趣味活动 -->
+  <section id="fun" class="section">
+    <div class="api-box">
+      <h3>Bored API 趣味活动</h3>
+      <p>获取无聊时的活动建议</p>
+      <button class="action-btn" onclick="getActivity()">获取活动</button>
+      <div id="activityResult"></div>
+    </div>
+  </section>
+
+  <!-- 笑话 -->
+  <section id="joke" class="section">
+    <div class="api-box">
+      <h3>JokeAPI 笑话</h3>
+      <p>获取随机笑话（英文）</p>
+      <button class="action-btn" onclick="getJoke()">获取笑话</button>
+      <div id="jokeResult"></div>
+    </div>
+  </section>
+
+  <!-- 随机图片 -->
+  <section id="image" class="section">
+    <div class="api-box">
+      <h3>Picsum 随机图片</h3>
+      <p>获取一张随机图片</p>
+      <button class="action-btn" onclick="getRandomImage()">获取图片</button>
+      <img id="randomImage" alt="随机图片" />
+    </div>
+  </section>
+
+  <!-- 数字趣味 -->
+  <section id="number" class="section">
+    <div class="api-box">
+      <h3>NumbersAPI 数字趣味</h3>
+      <p>输入数字获取趣味事实</p>
+      <input type="number" id="numberInput" placeholder="输入数字" />
+      <button class="action-btn" onclick="getNumberFact()">查询数字趣味</button>
+      <div id="numberResult"></div>
+    </div>
+  </section>
+
+  <script>
+    function switchSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      clearResults();
+    }
+
+    function clearResults() {
+      // 清空所有结果区域，避免切换页面看见旧结果
+      ['wikiResult', 'bookResult', 'weatherResult', 'locationResult', 'tvResult', 'activityResult', 'jokeResult', 'randomImage', 'numberResult'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === 'IMG') el.src = '';
+        else el.innerHTML = '';
       });
-    });
-  });
+    }
 
-  // 知识类
-  async function searchWikipedia() {
-    const q = document.getElementById('wikiQuery').value.trim();
-    if(!q) return alert('请输入关键词');
-    try {
-      const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`);
-      const data = await res.json();
-      if(data.extract) {
-        document.getElementById('wikiResult').textContent = data.extract;
-      } else {
-        document.getElementById('wikiResult').textContent = '未找到内容';
+    async function searchWikipedia() {
+      const query = document.getElementById('wikiInput').value.trim();
+      if (!query) return alert('请输入关键词');
+      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        document.getElementById('wikiResult').innerHTML = data.extract ? `<p>${data.extract}</p>` : '<p>未找到内容</p>';
+      } catch (e) {
+        document.getElementById('wikiResult').innerText = '请求失败';
       }
-    } catch(e) {
-      document.getElementById('wikiResult').textContent = '请求失败';
     }
-  }
 
-  async function searchNumber() {
-    const n = document.getElementById('numberQuery').value.trim();
-    if(!n || isNaN(n)) return alert('请输入有效数字');
-    try {
-      const res = await fetch(`http://numbersapi.com/${n}/trivia`);
-      const txt = await res.text();
-      document.getElementById('numberResult').textContent = txt;
-    } catch(e) {
-      document.getElementById('numberResult').textContent = '请求失败';
-    }
-  }
-
-  // 娱乐类
-  async function searchOMDb() {
-    const q = document.getElementById('movieQuery').value.trim();
-    if(!q) return alert('请输入电影名');
-    // OMDb 需要 key，改用 TMDb 免费公开API替代，提示用户改用下面功能
-    document.getElementById('movieResult').textContent = 'OMDb 需要 API Key，建议使用 TMDb 查询';
-  }
-
-  async function searchTMDb() {
-    const q = document.getElementById('tmdbQuery').value.trim();
-    if(!q) return alert('请输入电影名');
-    // TMDb 需要 API Key，无法直接调用，提示
-    document.getElementById('tmdbResult').textContent = 'TMDb 需要 API Key，无法直接调用，建议用其他公开API';
-  }
-
-  // 音乐类
-  async function searchLyrics() {
-    const artist = document.getElementById('artistQuery').value.trim();
-    const song = document.getElementById('songQuery').value.trim();
-    if(!artist || !song) return alert('请输入歌手名和歌曲名');
-    try {
-      const res = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(song)}`);
-      const data = await res.json();
-      if(data.lyrics) {
-        document.getElementById('lyricsResult').textContent = data.lyrics;
-      } else {
-        document.getElementById('lyricsResult').textContent = '未找到歌词';
+    async function searchBooks() {
+      const query = document.getElementById('bookInput').value.trim();
+      if (!query) return alert('请输入书名');
+      const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        if (data.docs && data.docs.length > 0) {
+          const book = data.docs[0];
+          const html = `
+            <h4>${book.title} (${book.first_publish_year || '未知年份'})</h4>
+            <p>作者: ${book.author_name ? book.author_name.join(', ') : '未知'}</p>
+            <p>出版社: ${book.publisher ? book.publisher[0] : '未知'}</p>
+            <p>ISBN: ${book.isbn ? book.isbn[0] : '无'}</p>
+          `;
+          document.getElementById('bookResult').innerHTML = html;
+        } else {
+          document.getElementById('bookResult').innerText = '未找到书籍';
+        }
+      } catch (e) {
+        document.getElementById('bookResult').innerText = '请求失败';
       }
-    } catch(e) {
-      document.getElementById('lyricsResult').textContent = '请求失败';
     }
-  }
 
-  // 天气地理
-  async function getIPLocation() {
-    try {
-      const res = await fetch('http://ip-api.com/json');
-      const data = await res.json();
-      if(data.status === 'success') {
-        document.getElementById('locationResult').textContent = `你的位置：${data.country}, ${data.regionName}, ${data.city}`;
-      } else {
-        document.getElementById('locationResult').textContent = '无法获取位置';
+    async function getWeather() {
+      const lat = document.getElementById('latInput').value.trim();
+      const lon = document.getElementById('lonInput').value.trim();
+      if (!lat || !lon) return alert('请输入纬度和经度');
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        if (data.current_weather) {
+          const weather = data.current_weather;
+          document.getElementById('weatherResult').innerHTML = `
+            <p>温度: ${weather.temperature} °C</p>
+            <p>风速: ${weather.windspeed} km/h</p>
+            <p>风向: ${weather.winddirection}°</p>
+            <p>时间: ${weather.time}</p>
+            `;
+          } else {
+            document.getElementById('weatherResult').innerText = '未获取到天气信息';
+          }
+        } catch (e) {
+          document.getElementById('weatherResult').innerText = '请求失败';
+        }
       }
-    } catch(e) {
-      document.getElementById('locationResult').textContent = '请求失败';
-    }
-  }
 
-  // 图片类
-  function getRandomImage() {
-    const url = `https://picsum.photos/600?random=${Date.now()}`;
-    document.getElementById('randomImg').src = url;
-  }
-
-  // 趣味工具
-  async function getActivity() {
-    try {
-      const res = await fetch('https://www.boredapi.com/api/activity');
-      const data = await res.json();
-      document.getElementById('activityResult').textContent = data.activity || '无活动建议';
-    } catch(e) {
-      document.getElementById('activityResult').textContent = '请求失败';
-    }
-  }
-
-  async function getJoke() {
-    try {
-      const res = await fetch('https://v2.jokeapi.dev/joke/Any');
-      const data = await res.json();
-      if(data.type === 'single') {
-        document.getElementById('jokeResult').textContent = data.joke;
-      } else if(data.type === 'twopart') {
-        document.getElementById('jokeResult').textContent = `${data.setup}\n${data.delivery}`;
-      } else {
-        document.getElementById('jokeResult').textContent = '未找到笑话';
+    async function getLocation() {
+      const url = 'https://ipwho.is/';
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('locationResult').innerHTML = `
+            <p>IP: ${data.ip}</p>
+            <p>国家: ${data.country} (${data.country_code})</p>
+            <p>城市: ${data.city}</p>
+            <p>时区: ${data.timezone.id}</p>
+            <p>经度: ${data.longitude}</p>
+            <p>纬度: ${data.latitude}</p>
+          `;
+        } else {
+          document.getElementById('locationResult').innerText = '无法获取定位信息';
+        }
+      } catch (e) {
+        document.getElementById('locationResult').innerText = '请求失败';
       }
-    } catch(e) {
-      document.getElementById('jokeResult').textContent = '请求失败';
     }
-  }
-</script>
 
+    async function searchTVMaze() {
+      const query = document.getElementById('tvInput').value.trim();
+      if (!query) return alert('请输入电视剧名');
+      const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        if (data.length > 0) {
+          const show = data[0].show;
+          document.getElementById('tvResult').innerHTML = `
+            <h4>${show.name} (${show.premiered ? show.premiered.substring(0,4) : '未知'})</h4>
+            <p>${show.summary ? show.summary.replace(/<[^>]+>/g, '') : '无简介'}</p>
+            <p>状态: ${show.status}</p>
+            <p>类型: ${show.type}</p>
+            <a href="${show.officialSite || show.url}" target="_blank">官网/详情</a>
+          `;
+        } else {
+          document.getElementById('tvResult').innerText = '未找到相关节目';
+        }
+      } catch (e) {
+        document.getElementById('tvResult').innerText = '请求失败';
+      }
+    }
+
+    async function getActivity() {
+      const url = 'https://www.boredapi.com/api/activity';
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        document.getElementById('activityResult').innerHTML = `
+          <p>活动: ${data.activity}</p>
+          <p>类型: ${data.type}</p>
+          <p>人数: ${data.participants}</p>
+          <p>价格: ${data.price}</p>
+        `;
+      } catch (e) {
+        document.getElementById('activityResult').innerText = '请求失败';
+      }
+    }
+
+    async function getJoke() {
+      const url = 'https://v2.jokeapi.dev/joke/Any?type=single';
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const data = await res.json();
+        document.getElementById('jokeResult').innerText = data.joke || '无笑话内容';
+      } catch (e) {
+        document.getElementById('jokeResult').innerText = '请求失败';
+      }
+    }
+
+    function getRandomImage() {
+      // 使用 Picsum 随机图片，尺寸固定 600x400
+      const url = `https://picsum.photos/600/400?random=${Date.now()}`;
+      document.getElementById('randomImage').src = url;
+    }
+
+    async function getNumberFact() {
+      const num = document.getElementById('numberInput').value.trim();
+      if (!num) return alert('请输入数字');
+      const url = `http://numbersapi.com/${num}/trivia`;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('请求失败');
+        const text = await res.text();
+        document.getElementById('numberResult').innerText = text;
+      } catch (e) {
+        document.getElementById('numberResult').innerText = '请求失败';
+      }
+    }
+  </script>
 </body>
 </html>
