@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>公共API聚合工具</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
+  header { background:#222; color:#fff; padding:1em; text-align:center; }
+  nav { background:#eee; padding:0.5em; text-align:center; }
+  nav button { margin:0 0.5em; padding:0.5em 1em; cursor:pointer; border:none; background:#222; color:#fff; border-radius:3px; }
+  nav button.active { background:#0078d7; }
+  section { display:none; padding:1em; max-width:600px; margin:1em auto; background:#fff; border-radius:6px; box-shadow:0 0 8px #ccc; }
+  section.active { display:block; }
+  .api-box { margin-top:1em; }
+  input[type=text] { width:80%; padding:0.5em; margin-right:0.5em; border:1px solid #ccc; border-radius:3px; }
+  button.api-btn { padding:0.5em 1em; cursor:pointer; border:none; background:#0078d7; color:#fff; border-radius:3px; }
+  pre { background:#f0f0f0; padding:1em; border-radius:3px; overflow-x:auto; max-height:300px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>公共API聚合工具</h1>
+  <p>免费、无需授权、公开API示例</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" data-target="knowledge">📚 知识</button>
+  <button class="nav-btn" data-target="entertainment">🎬 娱乐</button>
+  <button class="nav-btn" data-target="music">🎵 音乐</button>
+  <button class="nav-btn" data-target="weather">🌦 天气地理</button>
+  <button class="nav-btn" data-target="image">🖼 图片</button>
+  <button class="nav-btn" data-target="fun">👨‍💻 趣味</button>
+</nav>
+
+<section id="knowledge" class="active">
+  <h2>知识类</h2>
+  <div class="api-box">
+    <p>Wikipedia 搜索摘要</p>
+    <input type="text" id="wikiQuery" placeholder="输入关键词，例如：China" />
+    <button class="api-btn" onclick="searchWikipedia()">搜索</button>
+    <pre id="wikiResult"></pre>
+  </div>
+  <div class="api-box">
+    <p>Numbers API - 获取数字趣闻</p>
+    <input type="text" id="numberQuery" placeholder="输入数字，例如：42" />
+    <button class="api-btn" onclick="searchNumber()">查询</button>
+    <pre id="numberResult"></pre>
+  </div>
+</section>
+
+<section id="entertainment">
+  <h2>娱乐类</h2>
+  <div class="api-box">
+    <p>OMDb - 电影信息查询</p>
+    <input type="text" id="movieQuery" placeholder="输入电影名，例如：Inception" />
+    <button class="api-btn" onclick="searchOMDb()">查询</button>
+    <pre id="movieResult"></pre>
+  </div>
+  <div class="api-box">
+    <p>TMDb - 电影详情查询</p>
+    <input type="text" id="tmdbQuery" placeholder="输入电影名，例如：Avatar" />
+    <button class="api-btn" onclick="searchTMDb()">查询</button>
+    <pre id="tmdbResult"></pre>
+  </div>
+</section>
+
+<section id="music">
+  <h2>音乐类</h2>
+  <div class="api-box">
+    <p>Lyrics.ovh - 歌词查询</p>
+    <input type="text" id="artistQuery" placeholder="歌手名，例如：Adele" />
+    <input type="text" id="songQuery" placeholder="歌曲名，例如：Hello" />
+    <button class="api-btn" onclick="searchLyrics()">查询歌词</button>
+    <pre id="lyricsResult"></pre>
+  </div>
+</section>
+
+<section id="weather">
+  <h2>天气 / 地理类</h2>
+  <div class="api-box">
+    <p>IP-API - 获取当前IP地理位置</p>
+    <button class="api-btn" onclick="getIPLocation()">获取位置</button>
+    <pre id="locationResult"></pre>
+  </div>
+</section>
+
+<section id="image">
+  <h2>图片类</h2>
+  <div class="api-box">
+    <p>Picsum - 获取随机图片</p>
+    <button class="api-btn" onclick="getRandomImage()">获取图片</button>
+    <div style="margin-top:1em;">
+      <img id="randomImg" alt="随机图片" style="max-width:100%; border-radius:6px; box-shadow:0 0 5px #ccc" />
+    </div>
+  </div>
+</section>
+
+<section id="fun">
+  <h2>趣味工具类</h2>
+  <div class="api-box">
+    <p>BoredAPI - 获取活动建议</p>
+    <button class="api-btn" onclick="getActivity()">获取活动</button>
+    <pre id="activityResult"></pre>
+  </div>
+  <div class="api-box">
+    <p>JokeAPI - 获取笑话</p>
+    <button class="api-btn" onclick="getJoke()">获取笑话</button>
+    <pre id="jokeResult"></pre>
+  </div>
+</section>
+
+<script>
+  // 导航切换
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.getAttribute('data-target');
+      document.querySelectorAll('section').forEach(sec => {
+        sec.classList.toggle('active', sec.id === target);
+      });
+    });
+  });
+
+  // 知识类
+  async function searchWikipedia() {
+    const q = document.getElementById('wikiQuery').value.trim();
+    if(!q) return alert('请输入关键词');
+    try {
+      const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(q)}`);
+      const data = await res.json();
+      if(data.extract) {
+        document.getElementById('wikiResult').textContent = data.extract;
+      } else {
+        document.getElementById('wikiResult').textContent = '未找到内容';
+      }
+    } catch(e) {
+      document.getElementById('wikiResult').textContent = '请求失败';
+    }
+  }
+
+  async function searchNumber() {
+    const n = document.getElementById('numberQuery').value.trim();
+    if(!n || isNaN(n)) return alert('请输入有效数字');
+    try {
+      const res = await fetch(`http://numbersapi.com/${n}/trivia`);
+      const txt = await res.text();
+      document.getElementById('numberResult').textContent = txt;
+    } catch(e) {
+      document.getElementById('numberResult').textContent = '请求失败';
+    }
+  }
+
+  // 娱乐类
+  async function searchOMDb() {
+    const q = document.getElementById('movieQuery').value.trim();
+    if(!q) return alert('请输入电影名');
+    // OMDb 需要 key，改用 TMDb 免费公开API替代，提示用户改用下面功能
+    document.getElementById('movieResult').textContent = 'OMDb 需要 API Key，建议使用 TMDb 查询';
+  }
+
+  async function searchTMDb() {
+    const q = document.getElementById('tmdbQuery').value.trim();
+    if(!q) return alert('请输入电影名');
+    // TMDb 需要 API Key，无法直接调用，提示
+    document.getElementById('tmdbResult').textContent = 'TMDb 需要 API Key，无法直接调用，建议用其他公开API';
+  }
+
+  // 音乐类
+  async function searchLyrics() {
+    const artist = document.getElementById('artistQuery').value.trim();
+    const song = document.getElementById('songQuery').value.trim();
+    if(!artist || !song) return alert('请输入歌手名和歌曲名');
+    try {
+      const res = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(song)}`);
+      const data = await res.json();
+      if(data.lyrics) {
+        document.getElementById('lyricsResult').textContent = data.lyrics;
+      } else {
+        document.getElementById('lyricsResult').textContent = '未找到歌词';
+      }
+    } catch(e) {
+      document.getElementById('lyricsResult').textContent = '请求失败';
+    }
+  }
+
+  // 天气地理
+  async function getIPLocation() {
+    try {
+      const res = await fetch('http://ip-api.com/json');
+      const data = await res.json();
+      if(data.status === 'success') {
+        document.getElementById('locationResult').textContent = `你的位置：${data.country}, ${data.regionName}, ${data.city}`;
+      } else {
+        document.getElementById('locationResult').textContent = '无法获取位置';
+      }
+    } catch(e) {
+      document.getElementById('locationResult').textContent = '请求失败';
+    }
+  }
+
+  // 图片类
+  function getRandomImage() {
+    const url = `https://picsum.photos/600?random=${Date.now()}`;
+    document.getElementById('randomImg').src = url;
+  }
+
+  // 趣味工具
+  async function getActivity() {
+    try {
+      const res = await fetch('https://www.boredapi.com/api/activity');
+      const data = await res.json();
+      document.getElementById('activityResult').textContent = data.activity || '无活动建议';
+    } catch(e) {
+      document.getElementById('activityResult').textContent = '请求失败';
+    }
+  }
+
+  async function getJoke() {
+    try {
+      const res = await fetch('https://v2.jokeapi.dev/joke/Any');
+      const data = await res.json();
+      if(data.type === 'single') {
+        document.getElementById('jokeResult').textContent = data.joke;
+      } else if(data.type === 'twopart') {
+        document.getElementById('jokeResult').textContent = `${data.setup}\n${data.delivery}`;
+      } else {
+        document.getElementById('jokeResult').textContent = '未找到笑话';
+      }
+    } catch(e) {
+      document.getElementById('jokeResult').textContent = '请求失败';
+    }
+  }
+</script>
+
+</body>
+</html>
