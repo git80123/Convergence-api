@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>公共API聚合工具</title>
+  <title>API接口门户</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
     header { background: #333; color: white; padding: 1em; text-align: center; }
@@ -17,84 +17,84 @@
 </head>
 <body>
   <header>
-    <h1>🎯 免费公共 API 工具箱</h1>
-    <p>点击下方按钮以使用不同类别的免费 API</p>
+    <h1>🌸 API接口门户</h1>
+    <p>欢迎使用聚合API接口前端门户。</p>
   </header>
   <nav>
-    <button onclick="switchSection('knowledge')">📚 知识类</button>
-    <button onclick="switchSection('entertainment')">🎬 娱乐类</button>
-    <button onclick="switchSection('music')">🎵 音乐类</button>
-    <button onclick="switchSection('weather')">🌦️ 天气地理</button>
-    <button onclick="switchSection('image')">🖼️ 图像类</button>
-    <button onclick="switchSection('fun')">👨‍💻 趣味工具</button>
+    <button onclick="switchSection('knowledge')">📚 知识</button>
+    <button onclick="switchSection('entertainment')">🎬 娱乐</button>
+    <button onclick="switchSection('music')">🎵 音乐</button>
+    <button onclick="switchSection('weather')">🌦 天气</button>
+    <button onclick="switchSection('image')">🖼 随机图片</button>
+    <button onclick="switchSection('fun')">🧩 趣味</button>
   </nav>
 
-  <!-- 📚 知识类 -->
+  <!-- 知识板块 -->
   <div id="knowledge" class="section active">
     <div class="api-box">
-      <h3>Wikipedia 搜索</h3>
-      <p>使用 Wikipedia API 获取百科文章摘要。</p>
-      <input type="text" id="wikiInput" placeholder="输入搜索关键词...">
-      <button onclick="searchWikipedia()">搜索</button>
+      <h3>Wiki百科</h3>
+      <p>支持 Wiki 百科查询。</p>
+      <input type="text" id="wikiInput" placeholder="请输入查询词...">
+      <button onclick="searchWikipedia()">查询</button>
       <div id="wikiResult"></div>
     </div>
   </div>
 
-  <!-- 🎬 娱乐类 -->
+  <!-- 娱乐板块 -->
   <div id="entertainment" class="section">
     <div class="api-box">
-      <h3>TVMaze 剧集搜索</h3>
-      <p>输入剧集名称以获取电视节目、演员等信息。</p>
-      <input type="text" id="tvInput" placeholder="输入电视剧名...">
-      <button onclick="searchTVMaze()">搜索</button>
+      <h3>TVMaze 剧集查询</h3>
+      <p>支持 TVMaze 剧集搜索。</p>
+      <input type="text" id="tvInput" placeholder="请输入剧名...">
+      <button onclick="searchTVMaze()">查询</button>
       <div id="tvResult"></div>
     </div>
   </div>
 
-  <!-- 🎵 音乐类 -->
+  <!-- 音乐板块 -->
   <div id="music" class="section">
     <div class="api-box">
-      <h3>Lyrics.ovh 歌词搜索</h3>
-      <p>输入歌名和歌手获取歌词。</p>
+      <h3>Lyrics.ovh 歌词查询</h3>
+      <p>输入歌手与歌名获取歌词。</p>
       <input type="text" id="lyricsArtist" placeholder="歌手">
       <input type="text" id="lyricsTitle" placeholder="歌名">
-      <button onclick="getLyrics()">搜索歌词</button>
+      <button onclick="getLyrics()">查询</button>
       <div id="lyricsResult"></div>
     </div>
   </div>
 
-  <!-- 🌦️ 天气地理 -->
+  <!-- 天气板块 -->
   <div id="weather" class="section">
     <div class="api-box">
       <h3>IP 定位</h3>
-      <p>使用 ipwho.is 获取用户地理位置。</p>
-      <button onclick="getLocation()">获取位置</button>
+      <p>获取你当前的地理位置。</p>
+      <button onclick="getLocation()">查询</button>
       <div id="locationResult"></div>
     </div>
   </div>
 
-  <!-- 🖼️ 图像类 -->
+  <!-- 随机图片板块 -->
   <div id="image" class="section">
     <div class="api-box">
       <h3>随机图片</h3>
-      <p>Lorem Picsum 获取随机图像。</p>
-      <button onclick="getRandomImage()">获取图片</button>
+      <p>Lorempicsum 随机图片。</p>
+      <button onclick="getRandomImage()">获取</button>
       <div><img id="randomImage" style="max-width: 100%; margin-top: 1em;"></div>
     </div>
   </div>
 
-  <!-- 👨‍💻 趣味工具 -->
+  <!-- 趣味板块 -->
   <div id="fun" class="section">
     <div class="api-box">
       <h3>Bored API</h3>
-      <p>无聊？获取一个建议活动。</p>
-      <button onclick="getActivity()">获取活动</button>
+      <p>获取一个无聊时可以做的活动。</p>
+      <button onclick="getActivity()">查询</button>
       <div id="activityResult"></div>
     </div>
     <div class="api-box">
       <h3>Joke API</h3>
-      <p>获取一个笑话（英文）。</p>
-      <button onclick="getJoke()">获取笑话</button>
+      <p>获取一个笑话。</p>
+      <button onclick="getJoke()">查询</button>
       <div id="jokeResult"></div>
     </div>
   </div>
@@ -109,14 +109,14 @@
       const query = document.getElementById('wikiInput').value;
       const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
       const data = await res.json();
-      document.getElementById('wikiResult').innerHTML = data.extract ? `<p>${data.extract}</p>` : '<p>未找到内容</p>';
+      document.getElementById('wikiResult').innerHTML = data.extract ? `<p>${data.extract}</p>` : '<p>未找到相关内容</p>';
     }
 
     async function searchTVMaze() {
       const query = document.getElementById('tvInput').value;
       const res = await fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`);
       const data = await res.json();
-      document.getElementById('tvResult').innerHTML = data.length ? `<p>${data[0].show.name}：${data[0].show.summary}</p>` : '<p>未找到剧集</p>';
+      document.getElementById('tvResult').innerHTML = data.length ? `<p>${data[0].show.name}：${data[0].show.summary}</p>` : '<p>未找到</p>';
     }
 
     async function getLyrics() {
@@ -130,10 +130,10 @@
     async function getLocation() {
       const res = await fetch('https://ipwho.is/');
       const data = await res.json();
-      document.getElementById('locationResult').innerText = data.success ? `你在：${data.country}, ${data.region}, ${data.city}` : '无法获取位置';
+      document.getElementById('locationResult').innerText = data.success ? `${data.country}, ${data.region}, ${data.city}` : '获取失败';
     }
 
-    async function getRandomImage() {
+    function getRandomImage() {
       document.getElementById('randomImage').src = `https://picsum.photos/600?random=${Date.now()}`;
     }
 
