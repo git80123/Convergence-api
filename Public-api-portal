@@ -26,7 +26,6 @@
     <button onclick="switchSection('music')">🎵 音乐类</button>
     <button onclick="switchSection('weather')">🌦️ 天气地理</button>
     <button onclick="switchSection('image')">🖼️ 图像类</button>
-    <button onclick="switchSection('news')">📰 新闻类</button>
     <button onclick="switchSection('fun')">👨‍💻 趣味工具</button>
   </nav>
 
@@ -68,7 +67,7 @@
   <div id="weather" class="section">
     <div class="api-box">
       <h3>IP 定位</h3>
-      <p>使用 ip-api 获取用户地理位置。</p>
+      <p>使用 ipwho.is 获取用户地理位置。</p>
       <button onclick="getLocation()">获取位置</button>
       <div id="locationResult"></div>
     </div>
@@ -81,15 +80,6 @@
       <p>Lorem Picsum 获取随机图像。</p>
       <button onclick="getRandomImage()">获取图片</button>
       <div><img id="randomImage" style="max-width: 100%; margin-top: 1em;"></div>
-    </div>
-  </div>
-
-  <!-- 📰 新闻类 -->
-  <div id="news" class="section">
-    <div class="api-box">
-      <h3>Currents API 新闻</h3>
-      <p>获取最新新闻标题（示例，仅展示API结构）。</p>
-      <p>⚠️ 该接口部署前端会受 CORS 限制，仅展示结构。</p>
     </div>
   </div>
 
@@ -138,9 +128,9 @@
     }
 
     async function getLocation() {
-      const res = await fetch('http://ip-api.com/json/');
+      const res = await fetch('https://ipwho.is/');
       const data = await res.json();
-      document.getElementById('locationResult').innerText = `你在：${data.country}, ${data.regionName}, ${data.city}`;
+      document.getElementById('locationResult').innerText = data.success ? `你在：${data.country}, ${data.region}, ${data.city}` : '无法获取位置';
     }
 
     async function getRandomImage() {
